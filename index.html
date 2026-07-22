@@ -1894,6 +1894,31 @@ body.low-power .lulu-cover-grid .row{
   letter-spacing:0;
   font-weight:700;
 }
+.series-fit-page img[src^="assets/10-"]{
+  inset:.25vh .25vw 3.55vh .25vw!important;
+  width:calc(100% - .5vw)!important;
+  height:calc(100% - 3.8vh)!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
+.series-fit-page img[src^="assets/10-ecommerce"]{
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:cover!important;
+  object-position:center center!important;
+}
+.series-fit-page img[src$="10-ecommerce-main-style-v2.png"]{object-position:left center!important}
+.series-fit-page img[src$="10-ecommerce-detail-logic-v2.png"]{object-position:center 26%!important}
+.series-fit-page img[src$="10-ecommerce-page-template-v2.png"]{object-position:center 45%!important}
+.series-fit-page img[src$="10-ecommerce-campaign-kv-v2.png"]{object-position:left center!important}
+.cancel-fit-page img[src^="assets/12-cancelled-"]{
+  inset:.25vh .25vw 4.3vh .25vw!important;
+  width:calc(100% - .5vw)!important;
+  height:calc(100% - 4.55vh)!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+}
 @media (max-width: 900px){
   .lulu-s6-data{gap:clamp(18px,4vh,34px);padding-bottom:18px;max-width:94vw}
   .lulu-s6-desc,.lulu-s6-desc.narrow{max-width:94vw}
@@ -2584,7 +2609,7 @@ body.deck-editing #overview{pointer-events:none}
 </section>
 
 
-<section class="slide lulu light" data-layout="S15" data-animate="matrix-fill">
+<section class="slide lulu light series-fit-page" data-layout="S15" data-animate="matrix-fill">
   <div class="canvas-card" style="position:relative">
     <div class="chrome-min">
       <div class="l">10 &nbsp;&nbsp; SERIES VISUAL SYSTEM</div>
@@ -2614,10 +2639,10 @@ body.deck-editing #overview{pointer-events:none}
             <div class="lulu-small" style="font-weight:700;color:#555">主图统一风格 · 详情页逻辑 · 卖点层级 · 页面模板 · 营销素材延展</div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.4vw;min-height:0">
-            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-main-style.jpg" alt="电商主图统一风格示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:left center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">主图统一风格</div></div></div>
-            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-detail-logic.png" alt="电商详情页表达逻辑示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">详情页表达逻辑</div></div></div>
-            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-page-template.png" alt="电商系列化页面模板示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">系列化页面模板</div></div></div>
-            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-campaign-kv.png" alt="电商节点营销素材延展示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">节点营销素材延展</div></div></div>
+            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-main-style-v2.png" alt="电商主图统一风格示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:left center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">主图统一风格</div></div></div>
+            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-detail-logic-v2.png" alt="电商详情页表达逻辑示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">详情页表达逻辑</div></div></div>
+            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-page-template-v2.png" alt="电商系列化页面模板示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">系列化页面模板</div></div></div>
+            <div style="position:relative;background:#fff;min-height:0;overflow:hidden"><img src="assets/10-ecommerce-campaign-kv-v2.png" alt="电商节点营销素材延展示例" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block"><div style="position:absolute;left:0;right:0;bottom:0;padding:1vh 1vw;background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.94));box-sizing:border-box"><div class="lulu-kicker" style="font-size:max(18px,1.15vw);letter-spacing:0;text-align:center;color:#111;line-height:1.15">节点营销素材延展</div></div></div>
           </div>
         </div>
       </div>
@@ -2695,7 +2720,7 @@ body.deck-editing #overview{pointer-events:none}
         <div class="lulu-report-foot">SOURCE: 5-6月钛杯礼赠方向阶段性销售与点击反馈。</div>
       </div>
     </section>
-    <section class="slide lulu light" data-layout="S08" data-animate="duo-mirror">
+    <section class="slide lulu light cancel-fit-page" data-layout="S08" data-animate="duo-mirror">
   <div class="canvas-card" style="position:relative">
     <div class="chrome-min">
       <div class="l">12 &nbsp;&nbsp; SERIES LINE CANCELLED</div>
@@ -2712,8 +2737,8 @@ body.deck-editing #overview{pointer-events:none}
           <p class="lulu-body" style="font-size:max(17px,1.02vw);line-height:1.48;margin:.85vh 0 0">单品销售表现不佳时，系列延展会被快速收缩或取消。系列化不只是视觉方向，也需要商品策略、价格带、成本、档期与销售确定性共同支撑。</p>
         </div>
       </div>
-      <div data-anim="up" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1vh 1.05vw;min-height:0">
-        <div style="position:relative;background:#111;min-height:0;overflow:hidden;color:#fbfbf6">
+      <div data-anim="up" style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.05vw;min-height:0">
+        <div style="position:relative;background:#595456;min-height:0;overflow:hidden;color:#fbfbf6">
           <img src="assets/12-cancelled-denim-series.png" alt="牛仔系列视觉探索图" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block">
           <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.66),rgba(0,0,0,.18) 58%,rgba(0,0,0,.08))"></div>
           <div style="position:absolute;left:1.05vw;right:1.05vw;bottom:1.1vh;display:grid;grid-template-columns:1fr auto;gap:.8vw;align-items:end">
@@ -2724,7 +2749,7 @@ body.deck-editing #overview{pointer-events:none}
             <div class="lulu-kicker" style="background:#efff72;color:#111;padding:.42vh .65vw;font-size:max(12px,.72vw);letter-spacing:0">未进入上市节奏</div>
           </div>
         </div>
-        <div style="position:relative;background:#d9d9d2;min-height:0;overflow:hidden;color:#111">
+        <div style="position:relative;background:#c2d8ec;min-height:0;overflow:hidden;color:#111">
           <img src="assets/12-cancelled-pastel-series.png" alt="粉蓝黄系列视觉探索图" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block">
           <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(245,245,239,.52),rgba(245,245,239,.12) 54%,rgba(245,245,239,.03))"></div>
           <div style="position:absolute;left:1.05vw;right:1.05vw;bottom:1.1vh;display:grid;grid-template-columns:1fr auto;gap:.8vw;align-items:end">
@@ -2735,7 +2760,7 @@ body.deck-editing #overview{pointer-events:none}
             <div class="lulu-kicker" style="background:#111;color:#efff72;padding:.42vh .65vw;font-size:max(12px,.72vw);letter-spacing:0">单杯型上架</div>
           </div>
         </div>
-        <div style="position:relative;background:#d9d9d2;min-height:0;overflow:hidden;color:#111">
+        <div style="position:relative;background:#edc4d9;min-height:0;overflow:hidden;color:#111">
           <img src="assets/12-cancelled-valentine-series.png" alt="情人节系列视觉探索图" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block">
           <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(245,245,239,.5),rgba(245,245,239,.1) 54%,rgba(245,245,239,.03))"></div>
           <div style="position:absolute;left:1.05vw;right:1.05vw;bottom:1.1vh;display:grid;grid-template-columns:1fr auto;gap:.8vw;align-items:end">
@@ -2746,7 +2771,7 @@ body.deck-editing #overview{pointer-events:none}
             <div class="lulu-kicker" style="background:#111;color:#efff72;padding:.42vh .65vw;font-size:max(12px,.72vw);letter-spacing:0">单杯型上架</div>
           </div>
         </div>
-        <div style="position:relative;background:#111;min-height:0;overflow:hidden;color:#fbfbf6">
+        <div style="position:relative;background:#777574;min-height:0;overflow:hidden;color:#fbfbf6">
           <img src="assets/12-cancelled-luxury-series.png" alt="轻奢系列视觉探索图" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block">
           <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.58),rgba(0,0,0,.15) 58%,rgba(0,0,0,.06))"></div>
           <div style="position:absolute;left:1.05vw;right:1.05vw;bottom:1.1vh;display:grid;grid-template-columns:1fr auto;gap:.8vw;align-items:end">
@@ -2900,19 +2925,19 @@ body.deck-editing #overview{pointer-events:none}
         <div>PRODUCT + E-COMMERCE VISUAL · STAGE REVIEW</div>
       </div>
       <h2 style="align-self:start;margin:4.6vh 0 0;max-width:78vw;font-family:var(--sans),var(--sans-zh);font-size:clamp(46px,5.3vw,96px);line-height:.98;font-weight:400;letter-spacing:0;color:#efff72;text-shadow:0 1px 28px rgba(0,0,0,.38)">从视觉整合，<br>到商业反馈驱动的视觉协同</h2>
-      <div style="font-family:var(--sans),var(--sans-zh);font-size:clamp(36px,4vw,78px);font-weight:400;line-height:1.02;color:#efff72;text-align:right;align-self:end">从完成设计交付，<br>走向支撑产品判断与销售表达。</div>
+      <div class="closing-final-line" style="font-family:var(--sans),var(--sans-zh);font-size:clamp(36px,4vw,78px);font-weight:400;line-height:1.02;color:#efff72;text-align:right;align-self:end">从完成设计交付，<br>走向支撑产品判断与销售表达。</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3vw;align-items:start;color:#efff72;width:100%">
         <div style="border-top:1px solid rgba(239,255,114,.55);padding-top:1.35vh">
-          <div style="font-family:var(--sans),var(--sans-zh);font-size:clamp(26px,2.25vw,48px);font-weight:400;line-height:1.06">持续交付</div>
-          <p style="font-family:var(--sans),var(--sans-zh);font-size:max(15px,.94vw);line-height:1.42;font-weight:500;margin-top:1vh;max-width:29vw">新品开发、包装、电商页面与上市素材稳定推进。</p>
+          <div class="closing-summary-title" style="font-family:var(--sans),var(--sans-zh);font-size:clamp(26px,2.25vw,48px);font-weight:400;line-height:1.06">持续交付</div>
+          <p class="closing-summary-copy" style="font-family:var(--sans),var(--sans-zh);font-size:max(15px,.94vw);line-height:1.42;font-weight:500;margin-top:1vh;max-width:29vw">新品开发、包装、电商页面与上市素材稳定推进。</p>
         </div>
         <div style="border-top:1px solid rgba(239,255,114,.55);padding-top:1.35vh">
-          <div style="font-family:var(--sans),var(--sans-zh);font-size:clamp(26px,2.25vw,48px);font-weight:400;line-height:1.06">市场提醒</div>
-          <p style="font-family:var(--sans),var(--sans-zh);font-size:max(15px,.94vw);line-height:1.42;font-weight:500;margin-top:1vh;max-width:29vw">系列化不能只看审美完整，还要接受销售表现、价格带、成本与档期验证。</p>
+          <div class="closing-summary-title" style="font-family:var(--sans),var(--sans-zh);font-size:clamp(26px,2.25vw,48px);font-weight:400;line-height:1.06">市场提醒</div>
+          <p class="closing-summary-copy" style="font-family:var(--sans),var(--sans-zh);font-size:max(15px,.94vw);line-height:1.42;font-weight:500;margin-top:1vh;max-width:29vw">系列化不能只看审美完整，还要接受销售表现、价格带、成本与档期验证。</p>
         </div>
         <div style="border-top:1px solid rgba(239,255,114,.55);padding-top:1.35vh">
-          <div style="font-family:var(--sans),var(--sans-zh);font-size:clamp(26px,2.25vw,48px);font-weight:400;line-height:1.06">下半年重点</div>
-          <p style="font-family:var(--sans),var(--sans-zh);font-size:max(15px,.94vw);line-height:1.42;font-weight:500;margin-top:1vh;max-width:29vw">让市场反馈回流产品视觉判断，减少无效投入，提高系列化成功率。</p>
+          <div class="closing-summary-title" style="font-family:var(--sans),var(--sans-zh);font-size:clamp(26px,2.25vw,48px);font-weight:400;line-height:1.06">下半年重点</div>
+          <p class="closing-summary-copy" style="font-family:var(--sans),var(--sans-zh);font-size:max(15px,.94vw);line-height:1.42;font-weight:500;margin-top:1vh;max-width:29vw">让市场反馈回流产品视觉判断，减少无效投入，提高系列化成功率。</p>
         </div>
       </div>
       <p style="font-family:var(--sans),var(--sans-zh);font-size:max(10px,.62vw);line-height:1.2;font-weight:500;opacity:.74;color:#efff72;margin:0">SOURCE: 产品视觉 + 电商视觉一体化协同阶段复盘。</p>
