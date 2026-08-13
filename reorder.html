@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>页面顺序调整工具 · visual-report-site</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1d212b; --line:#2a2f3a;
+    --text:#e8eaed; --muted:#9aa3af; --accent:#4f8cff; --accent2:#7aa8ff;
+    --ok:#3ecf8e; --warn:#ffb454; --drag:#2f3a4e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif;min-height:100vh}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 80px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+  h1{font-size:22px;font-weight:700;letter-spacing:.3px}
+  h1 small{display:block;font-size:12.5px;color:var(--muted);font-weight:400;margin-top:4px}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  button{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 16px;border-radius:8px;font-size:13.5px;cursor:pointer;transition:.15s;font-family:inherit}
+  button:hover{border-color:var(--accent);color:var(--accent2)}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  button.primary:hover{background:var(--accent2);color:#fff}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  .status{font-size:12.5px;color:var(--muted);margin-bottom:16px;min-height:18px}
+  .status.ok{color:var(--ok)}
+  .status.warn{color:var(--warn)}
+  .list{display:flex;flex-direction:column;gap:10px}
+  .card{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 16px;transition:.15s;user-select:none}
+  .card:hover{border-color:var(--accent)}
+  .card.dragging{opacity:.5;border-style:dashed}
+  .card.drag-over{border-color:var(--accent);box-shadow:0 0 0 2px var(--drag)}
+  .num{flex:0 0 44px;height:44px;border-radius:9px;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:var(--accent2)}
+  .num.cover{color:var(--muted);font-size:12px}
+  .title{flex:1;font-size:14.5px;line-height:1.4;word-break:break-all}
+  .title small{display:block;color:var(--muted);font-size:11.5px;margin-top:2px;font-family:Consolas,monospace}
+  .handle{cursor:grab;color:var(--muted);font-size:18px;padding:6px 8px;border-radius:6px}
+  .handle:hover{background:var(--panel2);color:var(--text)}
+  .movebtn{display:flex;flex-direction:column;gap:4px}
+  .movebtn button{flex:1;padding:2px 10px;font-size:12px;line-height:1;min-width:34px}
+  .tip{margin-top:24px;padding:14px 16px;background:var(--panel);border:1px solid var(--line);border-radius:10px;font-size:12.5px;color:var(--muted);line-height:1.7}
+  .tip b{color:var(--text)}
+  .tip code{background:var(--panel2);padding:1px 6px;border-radius:4px;font-size:12px}
+  .cover-tag{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:2px 10px;margin-left:8px;vertical-align:1px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>页面顺序调整工具
+      <small>visual-report-site · 读取 index.html → 拖拽排序 → 自动重编号 → 保存</small>
+    </h1>
+    <div class="actions">
+      <button id="btnReload" title="重新从 index.html 读取">重新读取</button>
+      <button id="btnDownload" title="下载一份新的 index.html 副本">下载副本</button>
+      <button id="btnSave" class="primary" title="直接写回 index.html">保存到 index.html</button>
+    </div>
+  </header>
+  <div class="status" id="status">正在读取 index.html ...</div>
+  <div class="list" id="list"></div>
+  <div class="tip">
+    <b>使用说明：</b><br>
+    1. 拖动卡片（或点卡片右侧 ↑ / ↓）调整页面顺序，封面固定第一页，不可移动。<br>
+    2. 角标数字会自动按新顺序重新编号（从当前最小页码开始连续递增）。<br>
+    3. 点击 <code>保存到 index.html</code> 直接写回原文件（浏览器会弹出保存位置确认，选原 index.html 即可）；也可用 <code>下载副本</code> 另存。<br>
+    4. 保存后刷新 <code>http://localhost:8081</code> 即可查看新顺序。
+  </div>
+</div>
+
+<script>
+(function(){
+  var ORIGINAL = '';        // 原始完整 HTML
+  var SECTIONS = [];        // 解析出的页面 [{start,end,full,title,label,hasNum,num}]
+  var ORDER = [];           // 当前显示顺序（SECTIONS 的索引数组）
+  var START_NUM = 2;        // 编号起始（自动检测）
+  var listEl = document.getElementById('list');
+  var statusEl = document.getElementById('status');
+
+  /* ---------- 解析 ---------- */
+  function parse(html){
+    var sections = [];
+    var idx = 0;
+    while(true){
+      var si = html.indexOf('<section', idx);
+      if(si === -1) break;
+      var depth = 0, j = si, end = -1;
+      while(true){
+        var nextOpen = html.indexOf('<section', j + 8);
+        var nextClose = html.indexOf('</section>', j + 8);
+        if(nextClose === -1) break;
+        if(nextOpen !== -1 && nextOpen < nextClose){
+          depth++; j = nextOpen;
+        } else {
+          if(depth === 0){ end = nextClose + 10; break; }
+          depth--; j = nextClose;
+        }
+      }
+      if(end === -1) break;
+      var block = html.slice(si, end);
+      var cm = block.indexOf('<div class="chrome-min">');
+      var title = '', label = '', hasNum = false, num = 0;
+      if(cm !== -1){
+        var lEl = block.indexOf('<div class="l">', cm);
+        if(lEl !== -1){
+          var lEnd = block.indexOf('</div>', lEl);
+          var txt = block.slice(lEl + 15, lEnd).trim();
+          var m = txt.match(/^(\d{1,2})\s*(.*)$/);
+          if(m){ num = parseInt(m[1],10); hasNum = true; label = (m[2]||'').trim(); }
+          title = decodeEntities(txt);
+        }
+      }
+      sections.push({ start:si, end:end, block:block, title:title, label:label, hasNum:hasNum, num:num });
+      idx = end;
+    }
+    // 每个块的完整内容（含与下一块之间的空白/注释）
+    for(var i = 0; i < sections.length; i++){
+      sections[i].full = (i < sections.length - 1)
+        ? html.slice(sections[i].start, sections[i+1].start)
+        : html.slice(sections[i].start, sections[i].end);
+    }
+    return sections;
+  }
+
+  /* ---------- 渲染 ---------- */
+  function render(){
+    listEl.innerHTML = '';
+    ORDER.forEach(function(si, pos){
+      var s = SECTIONS[si];
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.draggable = (pos !== 0);
+      card.dataset.pos = pos;
+      card.dataset.idx = si;
+
+      var numEl = document.createElement('div');
+      if(s.hasNum){
+        numEl.className = 'num';
+        numEl.textContent = zero2(START_NUM + numberedBefore(pos));
+      } else {
+        numEl.className = 'num cover';
+        numEl.textContent = '封面';
+      }
+
+      var titleEl = document.createElement('div');
+      titleEl.className = 'title';
+      titleEl.textContent = s.hasNum ? (s.label || s.title) : (s.title || '(无标题)');
+      var small = document.createElement('small');
+      small.textContent = 'data-layout=' + (s.block.match(/data-layout="([^"]+)"/) || ['','?'])[1];
+      titleEl.appendChild(small);
+
+      var handle = document.createElement('div');
+      handle.className = 'handle';
+      handle.textContent = '⠿';
+      handle.title = '拖动排序';
+
+      var btns = document.createElement('div');
+      btns.className = 'movebtn';
+      var up = document.createElement('button');
+      up.textContent = '↑';
+      up.title = '上移';
+      up.disabled = (pos <= 1);
+      up.onclick = function(){ moveUp(pos); };
+      var down = document.createElement('button');
+      down.textContent = '↓';
+      down.title = '下移';
+      down.disabled = (pos >= ORDER.length - 1);
+      down.onclick = function(){ moveDown(pos); };
+      btns.appendChild(up); btns.appendChild(down);
+
+      card.appendChild(numEl);
+      card.appendChild(titleEl);
+      card.appendChild(handle);
+      card.appendChild(btns);
+
+      /* 拖拽 */
+      card.addEventListener('dragstart', function(e){
+        e.dataTransfer.setData('text/plain', String(this.dataset.pos));
+        this.classList.add('dragging');
+      });
+      card.addEventListener('dragend', function(){ this.classList.remove('dragging'); });
+      card.addEventListener('dragover', function(e){
+        if(this.dataset.pos === '0') return;
+        e.preventDefault();
+        this.classList.add('drag-over');
+      });
+      card.addEventListener('dragleave', function(){ this.classList.remove('drag-over'); });
+      card.addEventListener('drop', function(e){
+        e.preventDefault();
+        this.classList.remove('drag-over');
+        if(this.dataset.pos === '0') return;
+        var from = parseInt(e.dataTransfer.getData('text/plain'), 10);
+        var to = parseInt(this.dataset.pos, 10);
+        if(from === to || from === 0) return;
+        var item = ORDER.splice(from, 1)[0];
+        var target = (to > from) ? to - 1 : to;
+        ORDER.splice(target, 0, item);
+        render();
+      });
+
+      listEl.appendChild(card);
+    });
+  }
+
+  function numberedBefore(pos){
+    var c = 0;
+    for(var i = 0; i < pos; i++){ if(SECTIONS[ORDER[i]].hasNum) c++; }
+    return c;
+  }
+  function moveUp(pos){ if(pos <= 1) return; swap(pos, pos - 1); }
+  function moveDown(pos){ if(pos >= ORDER.length - 1) return; swap(pos, pos + 1); }
+  function swap(a, b){
+    var t = ORDER[a]; ORDER[a] = ORDER[b]; ORDER[b] = t;
+    render();
+  }
+  function zero2(n){ return n < 10 ? '0' + n : String(n); }
+  function decodeEntities(str){
+    var ta = document.createElement('textarea');
+    ta.innerHTML = str;
+    return ta.value;
+  }
+
+  /* ---------- 重组 + 重编号 ---------- */
+  function rebuild(){
+    var prefix = ORIGINAL.slice(0, SECTIONS[0].start);
+    var suffix = ORIGINAL.slice(SECTIONS[SECTIONS.length - 1].end);
+    var out = prefix;
+    ORDER.forEach(function(si){ out += SECTIONS[si].full; });
+    out += suffix;
+    // 重新编号：按新顺序遍历所有 chrome-min 的 <div class="l"> 数字，从 START_NUM 连续递增
+    // （封面无 chrome-min 自动跳过；每个 slide 恰好一个 chrome-min）
+    var n = START_NUM;
+    out = out.replace(/(<div class="chrome-min">[\s\S]*?<div class="l">)\d{1,2}/g, function(m){
+      return m.replace(/\d{1,2}$/, zero2(n++));
+    });
+    return out;
+  }
+
+  /* ---------- 读取 / 保存 ---------- */
+  function load(){
+    statusEl.className = 'status';
+    statusEl.textContent = '正在读取 index.html ...';
+    fetch('index.html', { cache:'no-store' })
+      .then(function(r){
+        if(!r.ok) throw new Error('HTTP ' + r.status);
+        return r.text();
+      })
+      .then(function(text){
+        ORIGINAL = text;
+        SECTIONS = parse(text);
+        ORDER = SECTIONS.map(function(_, i){ return i; });
+        // 检测起始编号
+        var nums = SECTIONS.filter(function(s){ return s.hasNum; }).map(function(s){ return s.num; });
+        START_NUM = nums.length ? Math.min.apply(null, nums) : 2;
+        render();
+        setStatus('ok', '读取成功：共 ' + SECTIONS.length + ' 页（编号从 ' + zero2(START_NUM) + ' 开始）。拖动卡片调整顺序后点击保存。');
+      })
+      .catch(function(err){
+        setStatus('warn', '读取失败：' + err.message + '。请确认本工具通过 http://localhost:8081/reorder.html 访问（不能直接双击打开）。');
+      });
+  }
+
+  function setStatus(cls, msg){ statusEl.className = 'status ' + cls; statusEl.textContent = msg; }
+
+  function doSave(){
+    if(!ORIGINAL){ setStatus('warn', '还没有数据，请先重新读取。'); return; }
+    var content = rebuild();
+    if(!window.showSaveFilePicker){
+      doDownload();
+      return;
+    }
+    showSaveFilePicker({
+      suggestedName: 'index.html',
+      types: [{ description: 'HTML 文件', accept: { 'text/html': ['.html'] } }]
+    })
+    .then(function(handle){ return handle.createWritable(); })
+    .then(function(w){
+      return w.write(content).then(function(){ return w.close(); });
+    })
+    .then(function(){
+      setStatus('ok', '已保存！刷新 http://localhost:8081 查看新顺序。');
+    })
+    .catch(function(err){
+      if(err && err.name === 'AbortError'){ setStatus('warn', '已取消保存。'); return; }
+      setStatus('warn', '保存失败：' + (err.message || err) + '。可改用「下载副本」。');
+    });
+  }
+
+  function doDownload(){
+    if(!ORIGINAL){ setStatus('warn', '还没有数据，请先重新读取。'); return; }
+    var content = rebuild();
+    var blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'index_new.html';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+    setStatus('ok', '已下载副本 index_new.html（手动替换到项目目录即可）。');
+  }
+
+  document.getElementById('btnReload').onclick = load;
+  document.getElementById('btnSave').onclick = doSave;
+  document.getElementById('btnDownload').onclick = doDownload;
+
+  load();
+})();
+</script>
+</body>
+</html>
